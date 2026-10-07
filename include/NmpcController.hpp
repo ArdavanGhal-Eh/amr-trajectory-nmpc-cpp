@@ -1,5 +1,6 @@
 #pragma once
 #include "Model.hpp"
+#include "DynamicObstacle.hpp"
 #include <vector>
 #include <Eigen/Dense>
 
@@ -25,6 +26,7 @@ public:
     double w_obs{50.0};
 
     std::vector<Obstacle> obstacles;
+    std::vector<DynamicObstacle> dynamic_obstacles;
 
     NmpcController(int n = 10, double time_step = 0.1) : horizon(n), dt(time_step) {}
 
@@ -33,7 +35,6 @@ public:
         const std::vector<RobotState>& reference_horizon
     );
 
-private:
     double computeTrajectoryCost(
         const RobotState& initial,
         const std::vector<ControlInput>& inputs,

@@ -10,7 +10,7 @@ double NmpcController::computeTrajectoryCost(
     double cost = 0.0;
     RobotState state = initial;
 
-    for (int k = 0; k < horizon && k < static_cast<int>(ref.size()); ++k) {
+    for (int k = 0; k < horizon && k < static_cast<int>(ref.size()) && k < static_cast<int>(inputs.size()); ++k) {
         state = RobotKinematics::stepRK4(state, inputs[k], dt);
 
         double dx = state.x - ref[k].x;
@@ -22,7 +22,7 @@ double NmpcController::computeTrajectoryCost(
         cost += w_pos * (dx * dx + dy * dy) + w_theta * (dtheta * dtheta);
         cost += w_u_v * (inputs[k].v * inputs[k].v) + w_u_omega * (inputs[k].omega * inputs[k].omega);
 
-        // Obstacle avoidance barrier cost
+        // Static obstacle avoidance barrier cost
         for (const auto& obs : obstacles) {
             double dist_sq = (state.x - obs.x) * (state.x - obs.x) + (state.y - obs.y) * (state.y - obs.y);
             double safe_dist = obs.radius + 0.35; // 0.35m robot safety buffer
@@ -30,6 +30,11 @@ double NmpcController::computeTrajectoryCost(
                 double penetration = safe_dist - std::sqrt(std::max(1e-4, dist_sq));
                 cost += w_obs * (penetration * penetration) * 100.0;
             }
+        }
+
+        // Dynamic moving obstacle barrier cost
+        for (const auto& dyn_obs : dynamic_obstacles) {
+            cost += dyn_obs.computeBarrierPenalty(state.x, state.y, dt, k, 0.35);
         }
     }
     return cost;
@@ -39,6 +44,10 @@ ControlInput NmpcController::computeOptimalControl(
     const RobotState& current,
     const std::vector<RobotState>& reference_horizon
 ) {
+    if (reference_horizon.empty()) {
+        return {0.0, 0.0};
+    }
+
     std::vector<ControlInput> u_horizon(horizon);
     
     // Warm start with heuristic feedforward towards next reference
