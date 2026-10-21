@@ -47,13 +47,13 @@ void test_dynamic_obstacle_penalty() {
     std::vector<RobotState> ref_horizon(10, {2.0, 0.0, 0.0});
 
     double cost_with_obs = nmpc.computeTrajectoryCost(init, straight_inputs, ref_horizon);
-    
+
     // Clear dynamic obstacles and compare cost
     nmpc.dynamic_obstacles.clear();
     double cost_without_obs = nmpc.computeTrajectoryCost(init, straight_inputs, ref_horizon);
 
     assert(cost_with_obs > cost_without_obs);
-    std::cout << "✅ [PASS] test_dynamic_obstacle_penalty | Penalty detected: " 
+    std::cout << "✅ [PASS] test_dynamic_obstacle_penalty | Penalty detected: "
               << (cost_with_obs - cost_without_obs) << "\n";
 }
 

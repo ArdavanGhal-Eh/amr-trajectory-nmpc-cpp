@@ -49,7 +49,7 @@ ControlInput NmpcController::computeOptimalControl(
     }
 
     std::vector<ControlInput> u_horizon(horizon);
-    
+
     // Warm start with heuristic feedforward towards next reference
     double dx = reference_horizon[0].x - current.x;
     double dy = reference_horizon[0].y - current.y;
@@ -76,13 +76,13 @@ ControlInput NmpcController::computeOptimalControl(
             // Numerical gradient wrt v
             std::vector<ControlInput> u_plus = u_horizon;
             u_plus[k].v += eps;
-            double grad_v = (computeTrajectoryCost(current, u_plus, reference_horizon) - 
+            double grad_v = (computeTrajectoryCost(current, u_plus, reference_horizon) -
                              computeTrajectoryCost(current, u_horizon, reference_horizon)) / eps;
 
             // Numerical gradient wrt omega
             std::vector<ControlInput> u_plus_w = u_horizon;
             u_plus_w[k].omega += eps;
-            double grad_w = (computeTrajectoryCost(current, u_plus_w, reference_horizon) - 
+            double grad_w = (computeTrajectoryCost(current, u_plus_w, reference_horizon) -
                              computeTrajectoryCost(current, u_horizon, reference_horizon)) / eps;
 
             u_horizon[k].v = std::clamp(u_horizon[k].v - alpha_v * grad_v, v_min, v_max);
