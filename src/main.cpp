@@ -28,7 +28,7 @@ int main() {
 
     for (int step = 0; step < total_steps; ++step) {
         double t = step * dt;
-        
+
         // Generate reference horizon (Figure-8 / Lemniscate)
         std::vector<RobotState> ref_horizon(controller.horizon);
         for (int k = 0; k < controller.horizon; ++k) {
@@ -54,13 +54,13 @@ int main() {
         max_tracking_error = std::max(max_tracking_error, err);
 
         if (step % 20 == 0 || step == total_steps - 1) {
-            std::cout << "Step " << std::setw(3) << step 
+            std::cout << "Step " << std::setw(3) << step
                       << " | X: " << std::setw(6) << std::fixed << std::setprecision(2) << state.x
                       << " | Y: " << std::setw(6) << state.y
                       << " | v: " << std::setw(4) << u.v << " m/s"
                       << " | w: " << std::setw(5) << u.omega << " rad/s"
                       << " | Err: " << std::setw(5) << err << " m"
-                      << " | Solve: " << std::setw(5) << static_cast<int>(elapsed_us) << " us" 
+                      << " | Solve: " << std::setw(5) << static_cast<int>(elapsed_us) << " us"
                       << std::endl;
         }
     }
