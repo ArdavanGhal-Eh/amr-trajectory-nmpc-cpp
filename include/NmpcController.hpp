@@ -17,7 +17,7 @@ public:
     double v_max{1.5};        // Max linear velocity (m/s)
     double v_min{0.0};
     double omega_max{1.2};    // Max angular velocity (rad/s)
-    
+
     // Weights
     double w_pos{10.0};
     double w_theta{5.0};
