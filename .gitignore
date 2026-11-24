@@ -15,3 +15,10 @@ CMakeCache.txt
 CMakeFiles/
 Makefile
 *.png
+
+# Nightly Hardened Hygiene Rules
+.env
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.key
