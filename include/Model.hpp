@@ -48,7 +48,7 @@ public:
         next.x += (dt / 6.0) * (k1(0) + 2.0 * k2(0) + 2.0 * k3(0) + k4(0));
         next.y += (dt / 6.0) * (k1(1) + 2.0 * k2(1) + 2.0 * k3(1) + k4(1));
         next.theta += (dt / 6.0) * (k1(2) + 2.0 * k2(2) + 2.0 * k3(2) + k4(2));
-        
+
         // Normalize theta to [-pi, pi]
         while (next.theta > M_PI) next.theta -= 2.0 * M_PI;
         while (next.theta < -M_PI) next.theta += 2.0 * M_PI;
